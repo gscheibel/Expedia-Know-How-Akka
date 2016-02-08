@@ -1,9 +1,21 @@
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, Props, Actor, ActorSystem}
+import akka.event.Logging
+
+class FirstActorScala extends Actor {
+  private val logger = Logging.getLogger(context.system, this)
+
+  override def receive: Receive = {
+    case message: String => logger.info(s"Message received:\n\t$message")
+  }
+}
 
 object AkkaScalaApp {
   def main(args: Array[String]) {
-    val system = ActorSystem("Expedia-scala-actor-system")
+    val system: ActorSystem = ActorSystem("Expedia-scala-actor-system")
+    val actorRef: ActorRef = system.actorOf(Props[FirstActorScala], "first-scala-actor")
 
-    print(system)
+    actorRef.tell("Hello Expedia from Scala app", Actor.noSender)
+
+    system.terminate()
   }
 }
