@@ -1,11 +1,11 @@
 import java.util.concurrent.TimeUnit
 
-import akka.actor.{ActorRef, Props, Actor, ActorSystem}
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.event.Logging
 import akka.pattern.ask
 import akka.util.Timeout
 
-import scala.concurrent.{Await, ExecutionContextExecutor}
+import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
 class FirstActorScala extends Actor {
@@ -33,8 +33,10 @@ object AkkaScalaApp {
 
     val possibleAnswer = actorRef.ask("Question: What is the answer to the Ultimate Question of Life, The Universe, and Everything?")
 
-    val answer = Await.result(possibleAnswer, defaultTimeout.duration).asInstanceOf[String]
-    logger.info(s"The answer is '$answer")
+    possibleAnswer.onComplete {
+      case Success(answer) => logger.info(s"The answer is '$answer'")
+      case Failure(error) => logger.error(error, "No answer has been found")
+    }
 
     system.terminate()
   }
