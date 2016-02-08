@@ -14,7 +14,7 @@ object AkkaScalaApp {
     val system: ActorSystem = ActorSystem("Expedia-scala-actor-system")
     val actorRef: ActorRef = system.actorOf(Props[FirstActorScala], "first-scala-actor")
 
-    actorRef.tell("Hello Expedia from Scala app", Actor.noSender)
+    actorRef ! "Hello Expedia from Scala app"
 
     system.terminate()
   }
