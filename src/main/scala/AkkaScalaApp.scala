@@ -31,7 +31,7 @@ object AkkaScalaApp {
 
     actorRef ! "Hello Expedia from Scala app"
 
-    val possibleAnswer = actorRef.ask("Question: What is the answer to the Ultimate Question of Life, The Universe, and Everything?")
+    val possibleAnswer = actorRef ? "Question: What is the answer to the Ultimate Question of Life, The Universe, and Everything?"
 
     possibleAnswer.onComplete {
       case Success(answer) => logger.info(s"The answer is '$answer'")
