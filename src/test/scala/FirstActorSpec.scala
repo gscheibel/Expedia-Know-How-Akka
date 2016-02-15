@@ -1,6 +1,7 @@
 import java.util.concurrent.TimeUnit
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.pattern.Patterns._
 import akka.pattern.ask
 import akka.testkit.{TestKit, TestProbe}
 import akka.util.Timeout
@@ -47,8 +48,39 @@ class FirstActorSpec(_system: ActorSystem) extends TestKit(_system: ActorSystem)
       val futureMagicAdd = (fas ? Add(1,1)).mapTo[Result]
 
       whenReady(futureMagicAdd) {
-        result => result.value should be(44)
+        result => result.value should be(45)
+      }
+    }
+
+    it("must use an actor injection") {
+      val fas = system.actorOf(Props[FirstActorScala])
+      val mathProbe = ProbeInjection.inject("mathActor")
+
+      val futureMagicAdd = (fas ? Add(1,1)).mapTo[Result]
+      mathProbe.expectMsg(Add(1,2))
+      mathProbe.reply(Result(20))
+
+      whenReady(futureMagicAdd) {
+        result => result.value should be(20)
       }
     }
   }
+}
+
+object ProbeInjection {
+  def inject(name: String)(implicit system: ActorSystem) = {
+    val probe = TestProbe()
+    system.actorOf(props(probe.ref), name)
+    probe
+  }
+
+  def props(probe: ActorRef) = Props(new ProbeInjection(probe))
+
+  private class ProbeInjection(probe: ActorRef) extends Actor {
+    implicit val defaultTimeout: Timeout = Timeout(100, TimeUnit.MILLISECONDS)
+    override def receive = {
+      case x => pipe(probe ? x, context.dispatcher).to(sender)
+    }
+  }
+
 }
