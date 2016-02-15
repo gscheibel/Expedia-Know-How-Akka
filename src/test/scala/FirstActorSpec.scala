@@ -2,7 +2,7 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.{ActorSystem, Props}
 import akka.pattern.ask
-import akka.testkit.TestKit
+import akka.testkit.{TestKit, TestProbe}
 import akka.util.Timeout
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, FunSpecLike, Matchers}
@@ -23,9 +23,17 @@ class FirstActorSpec(_system: ActorSystem) extends TestKit(_system: ActorSystem)
 
   describe("An actor") {
     it("must answer `42` when a question is asked") {
-      val actorRef = system.actorOf(Props[FirstActorScala])
+      val guessProbe = TestProbe()
 
-      val future: Future[String] = (actorRef ? "Question: This is a test question").mapTo[String]
+      val actorRef = system.actorOf(Props(new FirstActorScala {
+        override val guessActor = guessProbe.ref
+      }))
+
+      val question = "Question: This is a test question"
+      val future: Future[String] = (actorRef ? question).mapTo[String]
+
+      guessProbe.expectMsg(question)
+      guessProbe.reply("42")
 
       whenReady(future) { response =>
         response should be("42")

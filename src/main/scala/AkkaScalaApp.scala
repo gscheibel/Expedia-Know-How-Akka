@@ -2,6 +2,7 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor._
 import akka.event.Logging
+import akka.pattern.Patterns._
 import akka.pattern.ask
 import akka.util.Timeout
 
@@ -34,6 +35,7 @@ class GuessActor extends Actor {
   override def receive: Receive = {
     case msg: String =>
       logger.info("Let me think about it...")
+      Thread.sleep(200)
       sender ! "42"
   }
 }
