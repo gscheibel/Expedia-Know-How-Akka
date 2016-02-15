@@ -26,6 +26,9 @@ class FirstActorScala extends Actor {
       futureAnswer.map(guessedAnswer =>
         origin ! guessedAnswer
       )
+    case add: Add =>
+      val mathRef = context.actorSelection("/user/mathActor")
+      pipe(mathRef ? add, executionContext).to(sender)
   }
 }
 
@@ -35,8 +38,17 @@ class GuessActor extends Actor {
   override def receive: Receive = {
     case msg: String =>
       logger.info("Let me think about it...")
-      Thread.sleep(200)
       sender ! "42"
+  }
+}
+
+case class Add(op: Int, op2: Int)
+
+case class Result(value: Int)
+
+class MathActor(magicNumber: Int) extends Actor {
+  override def receive: Receive = {
+    case Add(op1, op2) => sender ! Result(op1 + op2 + magicNumber)
   }
 }
 

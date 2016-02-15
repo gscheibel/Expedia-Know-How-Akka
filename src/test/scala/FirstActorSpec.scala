@@ -39,5 +39,16 @@ class FirstActorSpec(_system: ActorSystem) extends TestKit(_system: ActorSystem)
         response should be("42")
       }
     }
+
+    it("must be able to add 2 numbers") {
+      val fas = system.actorOf(Props[FirstActorScala])
+      system.actorOf(Props(classOf[MathActor], 42), "mathActor")
+
+      val futureMagicAdd = (fas ? Add(1,1)).mapTo[Result]
+
+      whenReady(futureMagicAdd) {
+        result => result.value should be(44)
+      }
+    }
   }
 }
