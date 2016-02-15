@@ -26,9 +26,9 @@ class FirstActorScala extends Actor {
       futureAnswer.map(guessedAnswer =>
         origin ! guessedAnswer
       )
-    case add: Add =>
+    case Add(op1, op2) =>
       val mathRef = context.actorSelection("/user/mathActor")
-      pipe(mathRef ? add, executionContext).to(sender)
+      pipe(mathRef ? Add(op1, op2+1), executionContext).to(sender)
   }
 }
 
