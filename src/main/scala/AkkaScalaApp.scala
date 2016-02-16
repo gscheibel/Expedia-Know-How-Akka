@@ -5,6 +5,7 @@ import akka.event.Logging
 import akka.pattern.Patterns._
 import akka.pattern.ask
 import akka.util.Timeout
+import kamon.Kamon
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
@@ -54,6 +55,8 @@ class MathActor(magicNumber: Int) extends Actor {
 
 object AkkaScalaApp {
   def main(args: Array[String]) {
+    Kamon.start
+
     val system: ActorSystem = ActorSystem("Expedia-scala-actor-system")
     val logger = Logging.getLogger(system, this)
 
@@ -69,6 +72,7 @@ object AkkaScalaApp {
       case Failure(error) => logger.error(error, "No answer has been found")
     }
 
-//    system.terminate()
+/*    system.terminate()
+    Kamon.shutdown*/
   }
 }

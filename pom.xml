@@ -11,6 +11,7 @@
     <properties>
         <akka.version>2.4.1</akka.version>
         <kamon.version>0.5.2</kamon.version>
+        <aspectj.version>1.8.6</aspectj.version>
     </properties>
 
     <dependencies>
@@ -53,9 +54,10 @@
             <artifactId>kamon-akka_2.11</artifactId>
             <version>${kamon.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.kamon</groupId>
-            <artifactId>kamon-akka-remote_2.11</artifactId>
+            <artifactId>kamon-log-reporter_2.11</artifactId>
             <version>${kamon.version}</version>
         </dependency>
 
@@ -70,6 +72,11 @@
             <artifactId>scalatest_2.11</artifactId>
             <version>2.2.6</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
         </dependency>
     </dependencies>
 
@@ -120,16 +127,29 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2</version>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
+                        <id>run-java</id>
                         <goals>
-                            <goal>compile</goal>
+                            <goal>exec</goal>
                         </goals>
+                        <phase>compile</phase>
                     </execution>
                 </executions>
+                <configuration>
+                    <executable>java</executable>
+                    <classpathScope>runtime</classpathScope>
+                    <arguments>
+                        <argument>-javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+                        </argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>AkkaScalaApp</argument>
+                    </arguments>
+                </configuration>
             </plugin>
         </plugins>
     </build>
