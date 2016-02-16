@@ -12,7 +12,7 @@ import scala.util.{Failure, Success}
 object RemoteApp {
 
   def main(args: Array[String]) {
-    val config = ConfigFactory.parseString("""akka.remote.netty.tcp.port="2553"""").withFallback(ConfigFactory.load())
+    val config = ConfigFactory.parseString("""akka.remote.netty.tcp.port="2553"""")//.withFallback(ConfigFactory.load())
 
     val system: ActorSystem = ActorSystem("remote-app", config)
     val logger = Logging.getLogger(system, this)
