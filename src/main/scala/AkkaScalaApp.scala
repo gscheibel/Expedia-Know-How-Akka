@@ -69,6 +69,6 @@ object AkkaScalaApp {
       case Failure(error) => logger.error(error, "No answer has been found")
     }
 
-    system.terminate()
+//    system.terminate()
   }
 }
