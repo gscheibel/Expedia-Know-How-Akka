@@ -10,6 +10,7 @@
 
     <properties>
         <akka.version>2.4.1</akka.version>
+        <kamon.version>0.5.2</kamon.version>
     </properties>
 
     <dependencies>
@@ -41,6 +42,29 @@
             <artifactId>scalactic_2.11</artifactId>
             <version>2.2.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.kamon</groupId>
+            <artifactId>kamon-core_2.11</artifactId>
+            <version>${kamon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.kamon</groupId>
+            <artifactId>kamon-akka_2.11</artifactId>
+            <version>${kamon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.kamon</groupId>
+            <artifactId>kamon-akka-remote_2.11</artifactId>
+            <version>${kamon.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.11</artifactId>
