@@ -5,11 +5,3 @@
 Live coding session by Guillaume Scheibel.
 
 https://twitter.com/g_scheibel[@g_scheibel] / https://twitter.com/ExpediaEng[@ExpediaEng]
-
-
-According to the reactive manifesto, a reactive system must be:
-
- . Resilient
- . Message Driven
- . Elastic
- . Responsive
